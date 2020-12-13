@@ -36,7 +36,7 @@ class DuetWebAPI:
                 URL=(f'{self._base_url}'+'/machine/status')
                 r = self.requests.get(URL,timeout=(2,60))
                 j = self.json.loads(r.text)
-                _=j['result']
+                _=j
                 self.pt = 3
                 return
             except:
