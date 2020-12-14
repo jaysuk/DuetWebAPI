@@ -36,7 +36,7 @@ class DuetWebAPI:
                 URL=(f'{self._base_url}'+'/machine/status')
                 r = self.requests.get(URL,timeout=(2,60))
                 j = self.json.loads(r.text)
-                _=j['result']
+                _=j
                 self.pt = 3
                 return
             except:
@@ -67,8 +67,8 @@ class DuetWebAPI:
             URL=(f'{self._base_url}'+'/machine/status')
             r = self.requests.get(URL)
             j = self.json.loads(r.text)
-            ja=j['result']['move']['axes']
-            #d=j['result']['move']['drives']
+            ja=j['move']['axes']
+            #d=j['move']['drives']
             #ad=self.json.loads('{}')
             #for i in range(0,len(ja)):
             #    ad[ ja[i]['letter'] ] = ja[i]['drives'][0]
@@ -88,7 +88,7 @@ class DuetWebAPI:
             URL=(f'{self._base_url}'+'/machine/status')
             r = self.requests.get(URL)
             j = self.json.loads(r.text)
-            s = j['result']['job']['layer']
+            s = j['job']['layer']
             if (s == None): s=0
             return(s)
 
@@ -97,8 +97,8 @@ class DuetWebAPI:
             URL=(f'{self._base_url}'+'/machine/status')
             r = self.requests.get(URL)
             j = self.json.loads(r.text)
-            ja=j['result']['move']['axes']
-            jt=j['result']['tools']
+            ja=j['move']['axes']
+            jt=j['tools']
             ret=self.json.loads('{}')
             to = jt[tool]['offsets']
             for i in range(0,len(to)):
@@ -117,7 +117,7 @@ class DuetWebAPI:
             URL=(f'{self._base_url}'+'/machine/status')
             r = self.requests.get(URL)
             j = self.json.loads(r.text)
-            return(len(j['result']['move']['extruders']))
+            return(len(j['move']['extruders']))
 
     def getNumTools(self):
         if (self.pt == 2):
@@ -130,7 +130,7 @@ class DuetWebAPI:
             URL=(f'{self._base_url}'+'/machine/status')
             r = self.requests.get(URL)
             j = self.json.loads(r.text)
-            return(len(j['result']['tools']))
+            return(len(j['tools']))
 
     def getStatus(self):
         if (self.pt == 2):
@@ -147,7 +147,7 @@ class DuetWebAPI:
             URL=(f'{self._base_url}'+'/machine/status')
             r = self.requests.get(URL)
             j = self.json.loads(r.text)
-            return(j['result']['state']['status'])
+            return(j['state']['status'])
 
     def gCode(self,command):
         if (self.pt == 2):
@@ -183,9 +183,10 @@ class DuetWebAPI:
         
         if (self.pt == 2):
             URL=(f'{self._base_url}'+'/rr_upload?name='+filepath) #lol, probably not correct, fix welcome
+            r = self.requests.post(URL, data=file) #rrf2 requires post vs put
         if (self.pt == 3):
             URL=(f'{self._base_url}'+'/machine/file/'+filepath)
-        r = self.requests.put(URL, data=file)
+            r = self.requests.put(URL, data=file)
         if (r.ok):
             return(0)
         else:
@@ -202,7 +203,7 @@ class DuetWebAPI:
             URL=(f'{self._base_url}'+'/machine/status')
             r  = self.requests.get(URL)
             j  = self.json.loads(r.text)
-            jsa=j['result']['sensors']['analog']
+            jsa=j['sensors']['analog']
             return(jsa)
 
 
